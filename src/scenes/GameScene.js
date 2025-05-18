@@ -13,8 +13,31 @@ export default class GameScene {
   }
 
   async load() {
-    await AssetLoader.loadImage("player", "/assets/player.png");
-    await AssetLoader.loadImage("enemy", "/assets/enemy.png");
+    const playerImg = await AssetLoader.loadImage("player", "/assets/player.png");
+    const enemyImg = await AssetLoader.loadImage("enemy", "/assets/enemy.png");
+    
+    const standardWidth = 32;
+    const standardHeight = 32;
+
+    const player = this.entityManager.getPlayer();
+    player.width = standardWidth;
+    player.height = standardHeight;
+    player.sprite = {
+      image: playerImg,
+      frameWidth: playerImg.width,
+      frameHeight: playerImg.height,
+    };
+
+    for (const enemy of this.entityManager.enemies) {
+      enemy.width = standardWidth;
+      enemy.height = standardHeight;
+      enemy.sprite = {
+        image: enemyImg,
+        frameWidth: enemyImg.width,
+        frameHeight: enemyImg.height,
+      };
+    }
+
     this.renderer = new Renderer(this.getContext(), this.entityManager);
     this.isLoaded = true;
   }
@@ -22,6 +45,7 @@ export default class GameScene {
   getContext() {
     const canvas = document.getElementById("gameCanvas");
     return canvas.getContext("2d");
+
   }
 
   update(deltaTime) {
