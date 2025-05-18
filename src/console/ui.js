@@ -4,7 +4,7 @@ export default function createConsoleUI() {
     consoleEl.className = "jconsole-overlay";
     consoleEl.innerHTML = `
       <div class="jconsole-output" id="jconsole-output" tabindex="0"></div>
-      <input type="text" class="jconsole-input" id="jconsole-input" placeholder="Type a command..." />
+      <input type="text" autocomplete="off" class="jconsole-input" id="jconsole-input" placeholder="Type a command..." />
     `;
     document.body.appendChild(consoleEl);
   
