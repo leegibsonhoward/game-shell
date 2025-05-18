@@ -14,6 +14,7 @@ export default function handleConsoleInput(inputEl, outputEl, handleCommand, pri
           print("> " + input);
           commandHistory.push(input);
           historyIndex = commandHistory.length;
+          window.__jconsole_history_index__ = historyIndex; // sync global index
           localStorage.setItem("jconsole-command-history", JSON.stringify(commandHistory));
           await handleCommand(input);
           inputEl.value = "";
