@@ -1,0 +1,5 @@
+alias atk attack 0
+spawn 100 200
+atk
+move player 100 0
+status
