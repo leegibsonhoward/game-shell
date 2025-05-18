@@ -2,7 +2,10 @@
 import createConsoleUI from "./ui.js";
 import handleConsoleInput from "./inputHandler.js";
 import setupCommandRegistry from "./commandRegistry.js";
-import { entityManager } from "../main.js";
+import SceneManager from "../core/SceneManager.js";
+
+// Get the current scene’s entity manager
+const entityManager = SceneManager.getScene()?.entityManager;
 
 const { inputEl, outputEl, toggle, print } = createConsoleUI();
 
