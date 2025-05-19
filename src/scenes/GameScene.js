@@ -1,6 +1,6 @@
 // src/scenes/GameScene.js
 import EntityManager from "../entities/EntityManager.js";
-import Renderer from "../rendering/Renderer.js";
+import Renderer from "../core/Renderer.js";
 import InputHandler from "../core/InputHandler.js";
 import AssetLoader from "../core/AssetLoader.js";
 import { resolvePlayerEnemyCollisions } from "../systems/CollisionSystem.js";
