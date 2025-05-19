@@ -29,10 +29,6 @@ export default class EntityManager {
     this.enemies.push(enemy);
   }
 
-  movePlayer(dx, dy) {
-    this.player.move(dx, dy);
-  }
-
   moveEnemy(index, dx, dy) {
     const enemy = this.enemies[index];
     if (enemy) {

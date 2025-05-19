@@ -4,11 +4,15 @@ import Renderer from "../core/Renderer.js";
 import InputHandler from "../core/InputHandler.js";
 import AssetLoader from "../core/AssetLoader.js";
 import { resolvePlayerEnemyCollisions } from "../systems/CollisionSystem.js";
+import MovementSystem from "../systems/MovementSystem.js";
+
 
 export default class GameScene {
   constructor() {
     this.entityManager = new EntityManager();
     this.input = new InputHandler();
+    this.movementSystem = new MovementSystem(this.input, this.entityManager);
+
     this.renderer = null;
     this.isLoaded = false;
   }
@@ -51,10 +55,8 @@ export default class GameScene {
 
   update(deltaTime) {
     if (!this.isLoaded) return;
-    const { dx, dy } = this.input.getMovementVector();
-    if (dx !== 0 || dy !== 0) {
-      this.entityManager.movePlayer(dx, dy);
-    }
+
+    this.movementSystem.update();
     this.entityManager.updateAll(deltaTime);
 
     // basic collision handling
