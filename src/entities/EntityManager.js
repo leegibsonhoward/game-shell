@@ -29,21 +29,6 @@ export default class EntityManager {
     this.enemies.push(enemy);
   }
 
-  attackEnemy(index) {
-    const enemy = this.enemies[index];
-    if (enemy) {
-      const defeated = enemy.takeDamage(10);
-      if (defeated) {
-        this.enemies.splice(index, 1);
-        this.score += 10;
-        return "defeated";
-      } else {
-        return `damaged (${enemy.health} HP left)`;
-      }
-    }
-    return "not found";
-  }
-
   updateAll(deltaTime) {
     this.player.update(deltaTime);
     this.enemies.forEach(e => e.update(deltaTime));

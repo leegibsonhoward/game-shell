@@ -1,0 +1,10 @@
+spawn 400 80
+spawn 80 100
+spawn 40 160
+spawn 100 420
+spawn 500 80
+spawn 200 200
+spawn 140 300
+spawn 350 30
+spawn 160 40
+spawn 75 500

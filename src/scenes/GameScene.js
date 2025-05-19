@@ -6,6 +6,7 @@ import AssetLoader from "../core/AssetLoader.js";
 import { resolvePlayerEnemyCollisions } from "../systems/CollisionSystem.js";
 import MovementSystem from "../systems/MovementSystem.js";
 import EnemySystem from '../systems/EnemySystem.js';
+import CombatSystem from "../systems/CombatSystem.js";
 
 export default class GameScene {
   constructor() {
@@ -13,6 +14,8 @@ export default class GameScene {
     this.input = new InputHandler();
     this.movementSystem = new MovementSystem(this.input, this.entityManager);
     this.enemySystem = new EnemySystem(this.entityManager);
+    this.combatSystem = new CombatSystem(this.entityManager);
+
     this.renderer = null;
     this.isLoaded = false;
   }
@@ -66,8 +69,7 @@ export default class GameScene {
       (player, enemy, index) => {
         console.log(`💥 Player collided with enemy ${index}`);
         player.health -= 10;
-        this.entityManager.enemies.splice(index, 1);
-        this.entityManager.score += 10;
+        this.combatSystem.attackEnemy(index);
         console.log(`Player health: ${player.health}`);
       }
     );
