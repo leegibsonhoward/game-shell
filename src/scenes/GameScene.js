@@ -3,6 +3,7 @@ import EntityManager from "../entities/EntityManager.js";
 import Renderer from "../rendering/Renderer.js";
 import InputHandler from "../core/InputHandler.js";
 import AssetLoader from "../core/AssetLoader.js";
+import { resolvePlayerEnemyCollisions } from "../systems/CollisionSystem.js";
 
 export default class GameScene {
   constructor() {
@@ -55,11 +56,33 @@ export default class GameScene {
       this.entityManager.movePlayer(dx, dy);
     }
     this.entityManager.updateAll(deltaTime);
+
+    // basic collision handling
+    resolvePlayerEnemyCollisions(
+      this.entityManager.getPlayer(),
+      this.entityManager.enemies,
+      (player, enemy, index) => {
+        console.log(`💥 Player collided with enemy ${index}`);
+        player.health -= 10;
+        this.entityManager.enemies.splice(index, 1);
+        this.entityManager.score += 10;
+        console.log(`Player health: ${player.health}`);
+      }
+    );
+  
   }
 
   render(ctx) {
     if (!this.isLoaded) return;
     this.renderer.render();
+
+     // display player health and position
+    const player = this.entityManager.getPlayer();
+    ctx.fillStyle = "#00FF00";
+    ctx.font = "bold 14px 'Share Tech Mono', monospace";
+    ctx.fillText(`❤ HEALTH: ${player.health}`, 10, 20);
+    ctx.fillText(`📍 X:${Math.floor(player.x)} Y:${Math.floor(player.y)}`, 10, 40);
+
   }
 
   unload() {
