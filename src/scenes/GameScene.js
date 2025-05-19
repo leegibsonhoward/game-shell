@@ -5,14 +5,14 @@ import InputHandler from "../core/InputHandler.js";
 import AssetLoader from "../core/AssetLoader.js";
 import { resolvePlayerEnemyCollisions } from "../systems/CollisionSystem.js";
 import MovementSystem from "../systems/MovementSystem.js";
-
+import EnemySystem from '../systems/EnemySystem.js';
 
 export default class GameScene {
   constructor() {
     this.entityManager = new EntityManager();
     this.input = new InputHandler();
     this.movementSystem = new MovementSystem(this.input, this.entityManager);
-
+    this.enemySystem = new EnemySystem(this.entityManager);
     this.renderer = null;
     this.isLoaded = false;
   }
@@ -57,7 +57,7 @@ export default class GameScene {
     if (!this.isLoaded) return;
 
     this.movementSystem.update();
-    this.entityManager.updateAll(deltaTime);
+    this.enemySystem.updateAllEnemies(deltaTime);
 
     // basic collision handling
     resolvePlayerEnemyCollisions(

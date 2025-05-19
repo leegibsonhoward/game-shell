@@ -29,16 +29,6 @@ export default class EntityManager {
     this.enemies.push(enemy);
   }
 
-  moveEnemy(index, dx, dy) {
-    const enemy = this.enemies[index];
-    if (enemy) {
-    //   enemy.x += dx;
-    //   enemy.y += dy;
-    enemy.x = Math.round((enemy.x + dx) / GRID_SIZE) * GRID_SIZE;
-      enemy.y = Math.round((enemy.y + dy) / GRID_SIZE) * GRID_SIZE;
-    }
-  }
-
   attackEnemy(index) {
     const enemy = this.enemies[index];
     if (enemy) {
@@ -65,6 +55,10 @@ export default class EntityManager {
 
   getPlayer() {
     return this.player;
+  }
+
+  getEnemies() {
+    return this.enemies;
   }
 
   getScore() {
