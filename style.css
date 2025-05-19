@@ -21,6 +21,7 @@ html {
 canvas {
     display: block;
     background-color: #111;
+    image-rendering: pixelated;
     margin: 0 auto;
     border: 2px solid rgb(88, 82, 195);
 }

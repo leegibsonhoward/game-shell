@@ -76,12 +76,19 @@ export default class GameScene {
     if (!this.isLoaded) return;
     this.renderer.render();
 
+    // HUD background box
+    ctx.fillStyle ='rgba(0, 0, 0, .5)';
+    ctx.fillRect(10, 10, 120, 45);
+    ctx.strokeStyle = "#00FF00";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(10, 10, 120, 45);
+
      // display player health and position
     const player = this.entityManager.getPlayer();
-    ctx.fillStyle = "#00FF00";
-    ctx.font = "bold 14px 'Share Tech Mono', monospace";
-    ctx.fillText(`❤ HEALTH: ${player.health}`, 10, 20);
-    ctx.fillText(`📍 X:${Math.floor(player.x)} Y:${Math.floor(player.y)}`, 10, 40);
+    ctx.fillStyle ='#4e9ff4';
+    ctx.font = "bold 14px monospace";
+    ctx.fillText(`❤ HEALTH: ${player.health}`, 15, 25);
+    ctx.fillText(`📍 X:${Math.floor(player.x)} Y:${Math.floor(player.y)}`, 15, 45);
 
   }
 
