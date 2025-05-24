@@ -22,7 +22,10 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 // Start with the GameScene
-SceneManager.changeScene(new GameScene());
+// make window.currentScene available to all your
+// console commands that reference scene systems
+window.currentScene = new GameScene()
+SceneManager.changeScene(window.currentScene);
 
 // Connect game loop to the active scene
 const loop = new GameLoop(
