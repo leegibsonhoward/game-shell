@@ -27,9 +27,10 @@ export default function registerGameCommands(register, print) {
       
       if (isNaN(dx) || isNaN(dy)) return print("Usage: move player <dx> <dy>");
       
-      const player = scene.entityManager.getPlayer();
-      player.x += dx;
-      player.y += dy;
+      //const player = scene.entityManager.getPlayer();
+      //player.x += dx;
+      //player.y += dy;
+      scene.movementSystem.manualMovePlayer(dx, dy);
       
       print(`Moved player by (${dx}, ${dy})`);
     

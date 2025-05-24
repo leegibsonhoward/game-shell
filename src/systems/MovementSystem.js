@@ -13,4 +13,11 @@ export default class MovementSystem {
         player.y += dy;
     }
   }
+
+  manualMovePlayer(dx, dy) {
+    const player = this.entityManager.getPlayer();
+    player.x += dx;
+    player.y += dy;
+  }
+
 }
