@@ -11,7 +11,6 @@ export default class Renderer {
     }
   
     render() {
-      this.clear();
       const entities = this.entityManager.getAllEntities();
       for (const entity of entities) {
         entity.draw(this.ctx);
