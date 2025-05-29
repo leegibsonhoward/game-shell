@@ -12,10 +12,11 @@ html {
 }
 
 #shell {
-    position: relative;
     width: 100vw;
     height: 100vh;
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #259dff; /* Optional if you want to ensure full screen black */
 }
 

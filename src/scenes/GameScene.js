@@ -89,21 +89,30 @@ export default class GameScene {
     const canvas = document.getElementById("gameCanvas");
 
     // TODO: move to config?
-    // Internal resolution
-    canvas.width = 320;
-    canvas.height = 180;
 
-    // Stretch to full browser window
-    canvas.style.width = "100vw";
-    canvas.style.height = "100vh";
+    // Internal resolution for game logic
+    const GAME_WIDTH = 320;
+    const GAME_HEIGHT = 180;
+    const SCALE = 3; // Visual scale factor (960x540 output)
+
+    // Set internal canvas resolution
+    canvas.width = GAME_WIDTH;
+    canvas.height = GAME_HEIGHT;
+
+    // Visually scale up for display
+    canvas.style.width = `${GAME_WIDTH * SCALE}px`;
+    canvas.style.height = `${GAME_HEIGHT * SCALE}px`;
     canvas.style.imageRendering = "pixelated";
     canvas.style.display = "block";
-    canvas.style.margin = "0";
+    canvas.style.margin = "0 auto";
+    canvas.style.boxSizing = "border-box";
+    canvas.style.background = "#111";
 
+    // Get rendering context
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
-    console.log("Canvas initialized:", canvas.width, canvas.height);
+    console.log("Canvas initialized:", canvas.width, canvas.height, "scale:", this.worldScale);
     
     return ctx;
   }
