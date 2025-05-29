@@ -57,6 +57,7 @@ canvas {
     overflow-y: auto;
     padding: 0.5rem;
     white-space: pre-wrap;
+    scrollbar-width: none;
 }
 
 .jconsole-input {
