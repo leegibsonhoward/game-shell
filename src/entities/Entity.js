@@ -5,7 +5,7 @@ const GRID_SIZE = 32;
 export default class Entity {
     constructor(x, y, width, height, color = 'black', sprite = null) {
       this.x = Math.round(x / GRID_SIZE) * GRID_SIZE;
-    this.y = Math.round(y / GRID_SIZE) * GRID_SIZE;
+      this.y = Math.round(y / GRID_SIZE) * GRID_SIZE;
       this.width = width;
       this.height = height;
       this.color = color;
@@ -32,7 +32,7 @@ export default class Entity {
       ctx.fillRect(this.x, this.y, this.width, this.height);
     }
     // debug outline of all entities
-    ctx.strokeStyle = 'magenta';
+    ctx.strokeStyle = 'yellow';
     //ctx.lineWidth = 1;
     ctx.strokeRect(this.x, this.y, this.width, this.height);
   }
