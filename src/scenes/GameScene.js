@@ -88,23 +88,23 @@ export default class GameScene {
   getContext() {
     const canvas = document.getElementById("gameCanvas");
 
-    // Define logical resolution
-    const width = 640;
-    const height = 480;
-    const scale = 1;
+    // TODO: move to config?
+    // Internal resolution
+    canvas.width = 320;
+    canvas.height = 180;
 
-    // Set canvas resolution
-    canvas.width = width;
-    canvas.height = height;
-
-    // Set displayed (CSS) size
-    canvas.style.width = `${width * scale}px`;
-    canvas.style.height = `${height * scale}px`;
+    // Stretch to full browser window
+    canvas.style.width = "100vw";
+    canvas.style.height = "100vh";
+    canvas.style.imageRendering = "pixelated";
+    canvas.style.display = "block";
+    canvas.style.margin = "0";
 
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
-    //console.log("Canvas initialized:", canvas.width, canvas.height);
+    console.log("Canvas initialized:", canvas.width, canvas.height);
+    
     return ctx;
   }
 
@@ -145,15 +145,15 @@ if (this.tileRenderer) {
     // ✅ Draw HUD
     const player = this.entityManager.getPlayer();
     ctx.fillStyle = "#00FF00";
-    ctx.font = "bold 14px monospace";
+    ctx.font = "bold 12px monospace";
     ctx.fillStyle = "#000";
-    ctx.fillRect(5, 5, 180, 45);
+    ctx.fillRect(5, 5, 100, 40);
     ctx.strokeStyle = "#00FF00";
-    ctx.lineWidth = 1;
-    ctx.strokeRect(5, 5, 180, 45);
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(5, 5, 100, 40);
     ctx.fillStyle = "#00FF00";
     ctx.fillText(`❤ HEALTH: ${player.health}`, 10, 20);
-    ctx.fillText(`📍 X:${Math.floor(player.x)} Y:${Math.floor(player.y)}`, 10, 40);
+    ctx.fillText(`📍 X:${Math.floor(player.x)} Y:${Math.floor(player.y)}`, 10, 35);
 
 }
 

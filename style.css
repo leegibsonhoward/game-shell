@@ -2,8 +2,10 @@ body,
 html {
     margin: 0;
     padding: 0;
-    background: #4353d1;
+    background: #d945df;
+    box-sizing: border-box;
     font-family: "Share Tech Mono", monospace;
+    width: 100%;
     height: 100%;
     overflow: hidden;
     color: #0f0;
@@ -13,17 +15,20 @@ html {
     position: relative;
     width: 100vw;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #303799; /* Optional if you want to ensure full screen black */
-}
-canvas {
     display: block;
-    background-color: #111;
-    image-rendering: pixelated;
-    margin: 0 auto;
-    border: 2px solid rgb(88, 82, 195);
+    background-color: #259dff; /* Optional if you want to ensure full screen black */
+}
+
+canvas {
+  box-sizing: border-box;
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;  /* Visually fills browser */
+  /* height: 100%; */
+  image-rendering: pixelated; /* Ensures crisp pixel scaling */
+  border: 2px solid rgb(255, 255, 92); /* Optional decorative border */
+  background-color: #111; /* Canvas fill background */
 }
 
 /* JConsole (same from before, but adapted) */
