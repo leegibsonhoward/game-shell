@@ -112,7 +112,7 @@ export default class GameScene {
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
-    console.log("Canvas initialized:", canvas.width, canvas.height, "scale:", this.worldScale);
+    console.log("Canvas initialized:", canvas.width, canvas.height, "scale: " + SCALE + "x");
     
     return ctx;
   }
@@ -124,16 +124,16 @@ export default class GameScene {
     this.enemySystem.updateAllEnemies(deltaTime);
 
     // basic collision handling
-    resolvePlayerEnemyCollisions(
-      this.entityManager.getPlayer(),
-      this.entityManager.enemies,
-      (player, enemy, index) => {
-        console.log(`💥 Player collided with enemy ${index}`);
-        player.health -= 10;
-        this.combatSystem.attackEnemy(index);
-        console.log(`Player health: ${player.health}`);
-      }
-    );
+    // resolvePlayerEnemyCollisions(
+    //   this.entityManager.getPlayer(),
+    //   this.entityManager.enemies,
+    //   (player, enemy, index) => {
+    //     console.log(`💥 Player collided with enemy ${index}`);
+    //     player.health -= 10;
+    //     this.combatSystem.attackEnemy(index);
+    //     console.log(`Player health: ${player.health}`);
+    //   }
+    // );
   
   }
 

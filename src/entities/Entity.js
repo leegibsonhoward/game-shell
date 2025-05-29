@@ -3,13 +3,12 @@
 const GRID_SIZE = 32;
 
 export default class Entity {
-    constructor(x, y, width, height, color = 'black', sprite = null) {
+    constructor(x, y, width, height) {
       this.x = Math.round(x / GRID_SIZE) * GRID_SIZE;
       this.y = Math.round(y / GRID_SIZE) * GRID_SIZE;
       this.width = width;
       this.height = height;
-      this.color = color;
-      this.sprite = sprite; // { image, frameWidth, frameHeight }
+    //   this.sprite = sprite; // { image, frameWidth, frameHeight }
       this.health = 100;
       this.animationFrame = 0;
     }
@@ -33,8 +32,9 @@ export default class Entity {
     }
     // debug outline of all entities
     ctx.strokeStyle = 'yellow';
-    //ctx.lineWidth = 1;
-    ctx.strokeRect(this.x, this.y, this.width, this.height);
+    ctx.lineWidth = 1;
+    ctx.strokeRect(
+    Math.floor(this.x), Math.floor(this.y), this.width, this.height);
   }
 }
   

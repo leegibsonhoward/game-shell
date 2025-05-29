@@ -3,7 +3,7 @@ import Entity from "./Entity.js";
 
 export default class Enemy extends Entity {
   constructor(x, y) {
-    super(x, y, 30, 30, "red");
+    super(x, y, 32, 32);
     this.health = 50;
   }
 
