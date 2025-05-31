@@ -14,6 +14,7 @@ import { loadTilemapFromJSON } from "../core/tiles/TilemapLoader.js";
 
 export default class GameScene {
   constructor() {
+    this.showGrid = false; // Toggle for debug grid
     this.entityManager = new EntityManager();
     this.input = new InputHandler();
     this.movementSystem = new MovementSystem(this.input, this.entityManager);
@@ -71,6 +72,15 @@ export default class GameScene {
 
     this.renderer = new Renderer(this.getContext(), this.entityManager);
     this.isLoaded = true;
+
+    // ⌨️ Register key listener to toggle grid with 'G'
+    window.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === "g") {
+        this.showGrid = !this.showGrid;
+        console.log(`Grid overlay: ${this.showGrid ? "ON" : "OFF"}`);
+      }
+    });
+
   }
 
   getContext() {
@@ -133,11 +143,32 @@ export default class GameScene {
     // ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-if (this.tileRenderer) {
-  this.tileRenderer.render(ctx);
-}    
- // ✅ Draw game entities
-   this.renderer.render();
+    if (this.tileRenderer) {
+        this.tileRenderer.render(ctx);
+    }
+
+    // Conditionally draw debug tile grid (32x32 cells)
+    if (this.showGrid) {
+      ctx.save();
+      ctx.strokeStyle = "rgb(243, 255, 10)";
+      ctx.lineWidth = 0.5;
+      for (let x = 0; x <= ctx.canvas.width; x += 32) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, ctx.canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= ctx.canvas.height; y += 32) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(ctx.canvas.width, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // ✅ Draw game entities
+    this.renderer.render();
 
     // ✅ Draw HUD
     const player = this.entityManager.getPlayer();
