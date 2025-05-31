@@ -7,49 +7,78 @@
  */
 export default class TileManager {
   constructor() {
-    // Stores maps by name or identifier (e.g. "ground", "background", etc.)
-    this.maps = new Map();
+    /**
+     * Map of layer name → Tilemap
+     * These layers are loaded from a single .tmj Tiled JSON file.
+     * Each layer (e.g., background, ground, collision) is parsed separately
+     * and stored here for easy access by other systems.
+     */
+    this.maps = {}; // { background: Tilemap, ground: Tilemap, ... }
   }
 
   /**
-   * Adds a tilemap under a given key.
-   * @param {string} name - A unique name or layer identifier for this map.
-   * @param {Tilemap} tilemap - The tilemap to store.
+   * Add an entire set of named layers at once
+   * Typically used after loading a .tmj file with multiple tile layers.
+   * @param {Object} layerMap - Map of layerName → Tilemap
    */
-  addMap(name, tilemap) {
-    this.maps.set(name, tilemap);
+  addLayers(layerMap) {
+    this.maps = { ...this.maps, ...layerMap };
   }
 
   /**
-   * Retrieves a tilemap by name.
-   * @param {string} name - The name used to store the map.
-   * @returns {Tilemap|null} - The tilemap or null if not found.
+   * Add an individual tile layer.
+   * Currently unused, but supports dynamic or procedural layer creation.
+   * Useful if loading maps from multiple sources or editing layers on-the-fly.
+   * @param {string} name - Layer name
+   * @param {Tilemap} map - Tilemap instance
+   */
+  addMap(name, map) {
+    this.maps[name] = map;
+  }
+
+  /**
+   * Retrieve a specific layer by name (e.g., 'collision')
+   * Used by systems like rendering or tile collision lookup.
+   * @param {string} name
+   * @returns {Tilemap | undefined}
+   */
+  getLayer(name) {
+    return this.maps[name];
+  }
+
+  /**
+   * Alias for getLayer(name)
+   * Reserved for semantic flexibility (e.g., when treating maps as logical zones)
+   * @param {string} name
+   * @returns {Tilemap | undefined}
    */
   getMap(name) {
-    return this.maps.get(name) || null;
+    return this.getLayer(name);
   }
 
   /**
-   * Removes a map by name.
-   * @param {string} name - The key used to store the map.
-   */
-  removeMap(name) {
-    this.maps.delete(name);
-  }
-
-  /**
-   * Returns all tilemaps in insertion order.
-   * Useful for rendering multiple layers in correct order.
-   * @returns {Iterable<Tilemap>}
+   * Return all currently loaded tilemaps as a flat object
+   * Useful for debugging, serialization, or layer-wide operations
+   * @returns {Object<string, Tilemap>}
    */
   getAllMaps() {
-    return this.maps.values();
+    return this.maps;
   }
 
   /**
-   * Clears all stored tilemaps.
+   * Remove a specific tilemap layer
+   * Useful for unloading or swapping a single layer at runtime.
+   * Currently unused but prepared for dynamic map control.
+   * @param {string} name
+   */
+  removeMap(name) {
+    delete this.maps[name];
+  }
+
+  /**
+   * Clear all loaded layers (full map reset)
    */
   clear() {
-    this.maps.clear();
+    this.maps = {};
   }
 }
