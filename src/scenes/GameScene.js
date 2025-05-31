@@ -35,14 +35,16 @@ export default class GameScene {
     this.tileset = new Tileset(tilesetImg, 32, 32, 0);
     console.log("Tileset image loaded:", tilesetImg.width, tilesetImg.height);
 
-    // Load Tilemap from Tiled JSON using helper
-    const testMap = await loadTilemapFromJSON("/assets/maps/level-map.json", 32, 32);
+    // Load all tile layers (background, ground, foreground)
+    const layers = await loadTilemapFromJSON("/assets/maps/level-map.json", 32, 32);
 
+    // Store all layers in manager and renderer
+    this.tileManager.maps = layers;
+    this.tileRenderer = new TileRenderer(layers, this.tileset);
 
-  
-    // Add map to manager and set up renderer
-    this.tileManager.addMap("ground", testMap);
-    this.tileRenderer = new TileRenderer(testMap, this.tileset);
+    console.log("Tileset columns:", this.tileset.columns);
+
+    console.log("Loaded tile layers:", Object.keys(layers));
 
 
     const playerImg = await AssetLoader.loadImage("player", "/assets/player.png");

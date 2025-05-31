@@ -10,15 +10,18 @@ export default class Tileset {
    * @param {number} tileWidth - Width of a single tile in pixels.
    * @param {number} tileHeight - Height of a single tile in pixels.
    * @param {number} [spacing=0] - Optional spacing between tiles.
+   * @param {number} [margin=0] - Optional margin between tiles.
    */
-  constructor(image, tileWidth, tileHeight, spacing = 0) {
-    this.image = image; // Full tileset image
+  constructor(image, tileWidth, tileHeight, spacing = 0, margin = 0) {
+    this.image = image;
     this.tileWidth = tileWidth;
     this.tileHeight = tileHeight;
     this.spacing = spacing;
+    this.margin = margin;
 
-    // Calculate how many columns of tiles fit in the image
-    this.columns = Math.floor(image.width / (tileWidth + spacing));
+    // Calculate number of columns and rows from image size
+    this.columns = Math.floor(image.width / tileWidth);
+    this.rows = Math.floor(image.height / tileHeight);
   }
 
   /**
