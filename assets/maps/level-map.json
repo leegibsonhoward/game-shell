@@ -1,0 +1,46 @@
+{ "compressionlevel":-1,
+ "height":6,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[1, 2, 2, 2, 2, 2, 2, 2, 2, 4,
+            10, 62, 62, 62, 62, 62, 62, 62, 62, 13,
+            10, 62, 62, 62, 62, 11, 11, 24, 11, 13,
+            10, 62, 62, 62, 62, 62, 51, 62, 62, 13,
+            10, 62, 62, 52, 53, 54, 60, 62, 62, 13,
+            28, 30, 30, 30, 30, 30, 30, 30, 30, 31],
+         "height":6,
+         "id":1,
+         "name":"background",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.11.2",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "columns":9,
+         "firstgid":1,
+         "image":"..\/tilesets\/level-tileset.png",
+         "imageheight":300,
+         "imagewidth":300,
+         "margin":0,
+         "name":"level-tileset",
+         "spacing":0,
+         "tilecount":81,
+         "tileheight":32,
+         "tilewidth":32
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.10",
+ "width":10
+}

@@ -8,9 +8,9 @@ import MovementSystem from "../systems/MovementSystem.js";
 import EnemySystem from '../systems/EnemySystem.js';
 import CombatSystem from "../systems/CombatSystem.js";
 import Tileset from "../core/tiles/Tileset.js";
-import Tilemap from "../core/tiles/Tilemap.js";
 import TileRenderer from "../core/tiles/TileRenderer.js";
 import TileManager from "../core/tiles/TileManager.js";
+import { loadTilemapFromJSON } from "../core/tiles/TilemapLoader.js";
 
 export default class GameScene {
   constructor() {
@@ -30,25 +30,13 @@ export default class GameScene {
 
   async load() {
     // Load tileset image
-    const tilesetImg = await AssetLoader.loadImage("dungeon", "/assets/tilesets/test-tileset.png");
-    this.tileset = new Tileset(tilesetImg, 32, 32);
+    const tilesetImg = await AssetLoader.loadImage("dungeon", "/assets/tilesets/level-tileset.png");
+    this.tileset = new Tileset(tilesetImg, 32, 32, 0);
     console.log("Tileset image loaded:", tilesetImg.width, tilesetImg.height);
 
-    // Create a test tilemap (12x8) - blue computer
-    const testMap = new Tilemap([
-      [16, 17, 18, 19, 20, 21, 22, 23],
-      [48, 49, 50, 51, 52, 53, 54, 55],
-      [16, 17, 18, 19, 20, 21, 22, 23],
-      [16, 17, 18, 19, 20, 21, 22, 23],
-      [48, 49, 50, 51, 52, 53, 54, 55],
-      [80, 81, 82, 83, 84, 85, 86, 87],
-      [112, 113, 114, 115, 116, 117, 118, 119],
-      [144, 145, 146, 147, 148, 149, 150, 151],
-      [176, 177, 178, 179, 180, 181, 182, 183],
-      [208, 209, 210, 211, 212, 213, 214, 215],
-      [240, 241, 242, 243, 244, 245, 246, 247],
-      [272, 273, 274, 275, 276, 277, 278, 279],  
-    ], 32, 32);
+    // Load Tilemap from Tiled JSON using helper
+    const testMap = await loadTilemapFromJSON("/assets/maps/level-map.json", 32, 32);
+
 
   
     // Add map to manager and set up renderer
