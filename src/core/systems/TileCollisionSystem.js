@@ -42,6 +42,8 @@ export default class TileCollisionSystem {
     }
 
   const tileIndex = layer.data[row][col];
+console.log(`Tile @ (${col}, ${row}) =`, layer.data?.[row]?.[col]);
+
   return typeof tileIndex === "number" && tileIndex >= 0;
   }
 
@@ -63,6 +65,7 @@ export default class TileCollisionSystem {
 
     for (const [px, py] of corners) {
       if (this.isSolidAt(px, py)) {
+        console.log("🟥 BLOCKED at", px, py);
         entity.dx = 0;
         entity.dy = 0;
         return;

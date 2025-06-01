@@ -41,7 +41,7 @@ console.log("TileRenderer: drawing layers:", drawOrder);
           const dx = col * this.tileset.tileWidth;
           const dy = row * this.tileset.tileHeight;
 
-          console.log(`Rendering '${name}' tile ${tileIndex} at (${col}, ${row}) → sx:${sx} sy:${sy} dx:${dx} dy:${dy}`);
+          //console.log(`Rendering '${name}' tile ${tileIndex} at (${col}, ${row}) → sx:${sx} sy:${sy} dx:${dx} dy:${dy}`);
 
           ctx.drawImage(
             this.tileset.image,

@@ -29,6 +29,10 @@ export default class CollisionManager {
     // Prevent player from moving through solid tiles
     this.tileCollisionSystem.applyCollision(player);
 
+    // apply movement AFTER tile collision is checked
+    player.x += player.dx;
+    player.y += player.dy;
+
     // Handle player vs enemy AABB collision and apply game logic
     resolvePlayerEnemyCollisions(
       player,

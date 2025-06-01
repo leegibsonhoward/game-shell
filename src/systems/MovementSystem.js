@@ -12,11 +12,6 @@ export default class MovementSystem {
     // set dx/dy, even if zero, to ensure they're defined
     player.dx = dx;
     player.dy = dy;
-    
-    if (dx !== 0 || dy !== 0) {
-        player.x += dx;
-        player.y += dy;
-    }
   }
 
   /**
