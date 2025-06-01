@@ -9,7 +9,7 @@ export default class TileCollisionSystem {
     /**
      * You may optionally set which layer to treat as solid
      */
-    this.collisionLayerName = "ground";
+    this.collisionLayerName = "collision";
   }
 
   /**
