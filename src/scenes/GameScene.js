@@ -3,7 +3,6 @@ import EntityManager from "../entities/EntityManager.js";
 import Renderer from "../core/Renderer.js";
 import InputHandler from "../core/InputHandler.js";
 import AssetLoader from "../core/AssetLoader.js";
-import { resolvePlayerEnemyCollisions } from "../systems/CollisionSystem.js";
 import MovementSystem from "../systems/MovementSystem.js";
 import EnemySystem from '../systems/EnemySystem.js';
 import CombatSystem from "../systems/CombatSystem.js";
@@ -11,42 +10,60 @@ import Tileset from "../core/tiles/Tileset.js";
 import TileRenderer from "../core/tiles/TileRenderer.js";
 import TileManager from "../core/tiles/TileManager.js";
 import { loadTilemapFromJSON } from "../core/tiles/TilemapLoader.js";
+import TileCollisionSystem from "../core/systems/TileCollisionSystem.js";
+import CollisionManager from "../systems/CollisionManager.js";
 
 export default class GameScene {
   constructor() {
     this.showGrid = false; // Toggle for debug grid
     this.entityManager = new EntityManager();
     this.input = new InputHandler();
+    
+    // Gameplay systems
     this.movementSystem = new MovementSystem(this.input, this.entityManager);
     this.enemySystem = new EnemySystem(this.entityManager);
     this.combatSystem = new CombatSystem(this.entityManager);
-
+    
+    // Tile-based systems   
     this.tileManager = new TileManager(); // Handles all tilemaps
     this.tileRenderer = null;             // Draws tilemaps
     this.tileset = null;                  // Handles tileset slicing
-    
+    this.tileCollisionSystem = null;      // Handles solid tile logic
+    this.collisionManager = null; // Coordinates all collision logic
+
     this.renderer = null;
     this.isLoaded = false;
   }
 
   async load() {
-    // Load tileset image
+    // Load tileset image used for drawing the map
     const tilesetImg = await AssetLoader.loadImage("dungeon", "/assets/tilesets/level-tileset.png");
     this.tileset = new Tileset(tilesetImg, 32, 32, 0);
     console.log("Tileset image loaded:", tilesetImg.width, tilesetImg.height);
 
-    // Load all tile layers (background, ground, foreground)
+    // Load tilemap JSON with multiple named layers
     const layers = await loadTilemapFromJSON("/assets/maps/level-map.json", 32, 32);
 
-    // Store all layers in manager and renderer
-    this.tileManager.maps = layers;
+    // Merge layers into manager for future expansion
+    this.tileManager.addLayers(layers);
+
+    // Store raw layers in renderer as fallback
     this.tileRenderer = new TileRenderer(layers, this.tileset);
 
     console.log("Tileset columns:", this.tileset.columns);
-
     console.log("Loaded tile layers:", Object.keys(layers));
 
+    // Setup tile collision system using 'collision' layer
+    this.tileCollisionSystem = new TileCollisionSystem(this.tileManager);
 
+    // Setup collision manager to coordinate logic
+    this.collisionManager = new CollisionManager(
+      this.entityManager,
+      this.tileCollisionSystem,
+      this.combatSystem
+    );
+
+    // Load character sprites
     const playerImg = await AssetLoader.loadImage("player", "/assets/player.png");
     const enemyImg = await AssetLoader.loadImage("enemy", "/assets/enemy.png");
     
@@ -88,7 +105,7 @@ export default class GameScene {
   getContext() {
     const canvas = document.getElementById("gameCanvas");
 
-    // TODO: move to config?
+    // TODO: refractor to config?
 
     // Internal resolution for game logic
     const GAME_WIDTH = 320;
@@ -120,21 +137,16 @@ export default class GameScene {
   update(deltaTime) {
     if (!this.isLoaded) return;
 
+    // Apply movement input
     this.movementSystem.update();
+
+    
+    this.collisionManager.update();
+
+
+    // Update enemy logic
     this.enemySystem.updateAllEnemies(deltaTime);
 
-    // basic collision handling
-    // resolvePlayerEnemyCollisions(
-    //   this.entityManager.getPlayer(),
-    //   this.entityManager.enemies,
-    //   (player, enemy, index) => {
-    //     console.log(`💥 Player collided with enemy ${index}`);
-    //     player.health -= 10;
-    //     this.combatSystem.attackEnemy(index);
-    //     console.log(`Player health: ${player.health}`);
-    //   }
-    // );
-  
   }
 
   render(ctx) {
@@ -143,8 +155,9 @@ export default class GameScene {
     // Debug background
     // ctx.fillStyle = "black";
     // ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
+    // Draw tile layers (background/ground/foreground)
     if (this.tileRenderer) {
         this.tileRenderer.render(ctx);
     }
