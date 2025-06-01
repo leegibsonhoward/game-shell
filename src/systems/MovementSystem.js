@@ -19,7 +19,15 @@ export default class MovementSystem {
     }
   }
 
-  manualMovePlayer(dx, dy) {
+  /**
+   * Teleports the player instantly without triggering movement-based systems.
+   * - Does NOT set dx/dy, so tile collision and animations are unaffected.
+   * - Use for console commands, dev tools, or scripted transitions.
+   *
+   * For simulated movement with collision/animation, consider adding
+   * a separate method that sets dx/dy and lets systems process it.
+   */
+    teleportPlayer(dx, dy) {
     const player = this.entityManager.getPlayer();
     player.x += dx;
     player.y += dy;

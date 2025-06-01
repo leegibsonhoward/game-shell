@@ -30,7 +30,7 @@ export default function registerGameCommands(register, print) {
       //const player = scene.entityManager.getPlayer();
       //player.x += dx;
       //player.y += dy;
-      scene.movementSystem.manualMovePlayer(dx, dy);
+      scene.movementSystem.teleportPlayer(dx,dy);
       
       print(`Moved player by (${dx}, ${dy})`);
     
