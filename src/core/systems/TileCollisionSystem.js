@@ -1,4 +1,7 @@
 // core/systems/TileCollisionSystem.js
+
+import { tileExistsAt } from "../tiles/tileUtils.js";
+
 export default class TileCollisionSystem {
   constructor(tileManager) {
     /**
@@ -12,39 +15,16 @@ export default class TileCollisionSystem {
     this.collisionLayerName = "collision";
   }
 
-  /**
+   /**
    * Check if a world-space position is colliding with a solid tile
+   * Uses the shared tileExistsAt() utility for safe lookup.
    * @param {number} x - World-space x position in pixels
    * @param {number} y - World-space y position in pixels
    * @returns {boolean}
    */
   isSolidAt(x, y) {
     const layer = this.tileManager.getLayer(this.collisionLayerName);
-    if (!layer || !layer.data || !Array.isArray(layer.data)) return false;
-
-    const col = Math.floor(x / layer.tileWidth);
-    const row = Math.floor(y / layer.tileHeight);
-
-    // Out of bounds check
-    //if (row < 0 || col < 0 || row >= layer.data.length || col >= layer.data[0].length) return false;
-
-    const rows = layer.data.length;
-    const cols = layer.data[0]?.length ?? 0;
-
-    // Out-of-bounds guard
-    if (
-    !Number.isFinite(row) || !Number.isFinite(col) ||   // Ensure valid numbers
-    row < 0 || col < 0 ||
-    row >= rows || col >= cols
-    ) {
-        console.warn(`TileCollisionSystem: invalid row/col → row: ${row}, col: ${col}, x: ${x}, y: ${y}`);
-        return false;
-    }
-
-  const tileIndex = layer.data[row][col];
-console.log(`Tile @ (${col}, ${row}) =`, layer.data?.[row]?.[col]);
-
-  return typeof tileIndex === "number" && tileIndex >= 0;
+    return tileExistsAt(layer, x, y);
   }
 
   /**
