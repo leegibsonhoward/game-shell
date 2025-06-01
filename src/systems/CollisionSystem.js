@@ -1,12 +1,14 @@
-// src/systems/CollisionSystem.js
-export function checkAABBCollision(a, b) {
-  return (
-    a.x < b.x + b.width &&
-    a.x + a.width > b.x &&
-    a.y < b.y + b.height &&
-    a.y + a.height > b.y
-  );
-}
+// src/systems/CollisionSystem.js (renamed purpose)
+// This file contains game-specific collision logic
+// It uses core AABB utilities for overlap detection
+
+import { checkAABBCollision } from "../core/collision/AABB.js";
+
+/**
+ * Game-level utility function to resolve player ↔ enemy collisions.
+ * This logic should remain outside the core engine since it assumes
+ * specific game rules like "player" and "enemy" roles.
+ */
 
 export function resolvePlayerEnemyCollisions(player, enemies, onCollide) {
   for (let i = 0; i < enemies.length; i++) {
