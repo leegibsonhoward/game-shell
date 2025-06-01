@@ -6,6 +6,8 @@ export default class Entity {
     constructor(x, y, width, height) {
       this.x = Math.round(x / GRID_SIZE) * GRID_SIZE;
       this.y = Math.round(y / GRID_SIZE) * GRID_SIZE;
+      this.dx = 0; // initialize movement delta
+      this.dy = 0;
       this.width = width;
       this.height = height;
     //   this.sprite = sprite; // { image, frameWidth, frameHeight }
