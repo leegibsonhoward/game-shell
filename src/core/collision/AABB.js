@@ -1,9 +1,15 @@
 // src/core/collision/AABB.js
+
+import { getHitbox } from './getHitbox.js';
+
 export function checkAABBCollision(a, b) {
+  const boxA = getHitbox(a);
+  const boxB = getHitbox(b);
+
   return (
-    a.x < b.x + b.width &&
-    a.x + a.width > b.x &&
-    a.y < b.y + b.height &&
-    a.y + a.height > b.y
+    boxA.x < boxB.x + boxB.width &&
+    boxA.x + boxA.width > boxB.x &&
+    boxA.y < boxB.y + boxB.height &&
+    boxA.y + boxA.height > boxB.y
   );
 }
