@@ -13,6 +13,9 @@ export default class Entity {
     //   this.sprite = sprite; // { image, frameWidth, frameHeight }
       this.health = 100;
       this.animationFrame = 0;
+
+      // Optional: custom collision hitbox offset
+      this.hitbox = null; // { offsetX, offsetY, width, height }
     }
   
     update(deltaTime) {
@@ -37,6 +40,15 @@ export default class Entity {
     ctx.lineWidth = 1;
     ctx.strokeRect(
     Math.floor(this.x), Math.floor(this.y), this.width, this.height);
+
+    // Draw red hitbox if enabled
+    if (window.currentScene?.debugDrawHitboxes && this.hitbox) {
+    //console.log(window.currentScene?.debugDrawHitboxes)
+    const { offsetX = 0, offsetY = 0, width, height } = this.hitbox;
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(Math.floor(this.x + offsetX), Math.floor(this.y + offsetY), width, height);
+  }
   }
 }
   

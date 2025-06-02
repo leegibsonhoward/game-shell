@@ -58,8 +58,9 @@ export default class CollisionManager {
       (player, enemy, index) => {
         console.log(`💥 Player collided with enemy ${index}`);
         player.health -= 10;
-        this.combatSystem.attackEnemy(index);
-        console.log(`Player health: ${player.health}`);
+        // disabled to fine tune hitbox precision
+        //this.combatSystem.attackEnemy(index);
+        //console.log(`Player health: ${player.health}`);
       }
     );
   }

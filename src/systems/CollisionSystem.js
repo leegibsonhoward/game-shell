@@ -12,7 +12,7 @@ export function resolvePlayerEnemyCollisions(player, enemies, onCollide) {
     const enemy = enemies[i];
     if (checkAABBCollision(player, enemy)) {
       if (onCollide) onCollide(player, enemy, i);
-    }
+    } else console.log(`💥 Player not colliding with enemy.`);
   }
 }
 

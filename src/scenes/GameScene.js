@@ -15,7 +15,8 @@ import CollisionManager from "../systems/CollisionManager.js";
 
 export default class GameScene {
   constructor() {
-    this.showGrid = false; // Toggle for debug grid
+    this.debugDrawHitboxes = false; // Toggle for hitbox debug
+    this.showGrid = false;          // Toggle for debug grid
     this.entityManager = new EntityManager();
     this.input = new InputHandler();
     
@@ -98,6 +99,13 @@ export default class GameScene {
       if (e.key.toLowerCase() === "g") {
         this.showGrid = !this.showGrid;
         console.log(`Grid overlay: ${this.showGrid ? "ON" : "OFF"}`);
+      }
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === "h") {
+      this.debugDrawHitboxes = !this.debugDrawHitboxes;
+      console.log(`🔲 Hitbox Debug: ${this.debugDrawHitboxes ? "ON" : "OFF"}`);
       }
     });
 
