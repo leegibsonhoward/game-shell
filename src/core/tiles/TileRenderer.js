@@ -14,11 +14,11 @@ export default class TileRenderer {
    * @param {CanvasRenderingContext2D} ctx
    */
   render(ctx) {
-    const drawOrder = ["background", "collision", "foreground"];
+    const drawOrder = ["background", "collision", "foreground", "hazard"];
 
     // Add this inside the render method before the drawOrder loop
-console.log("TileRenderer: available layers:", this.layers);
-console.log("TileRenderer: drawing layers:", drawOrder);
+//console.log("TileRenderer: available layers:", this.layers);
+//console.log("TileRenderer: drawing layers:", drawOrder);
 
     for (const name of drawOrder) {
       const map = this.layers[name];

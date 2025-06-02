@@ -1,5 +1,5 @@
 // systems/CollisionManager.js
-import { resolvePlayerEnemyCollisions } from "./CollisionSystem.js";
+import { resolvePlayerEnemyCollisions, isHazardAt } from "./CollisionSystem.js";
 
 /**
  * CollisionManager orchestrates all game-specific collision logic.
@@ -12,10 +12,11 @@ export default class CollisionManager {
    * @param {TileCollisionSystem} tileCollisionSystem - for solid tile blocking
    * @param {CombatSystem} combatSystem - to resolve combat on collision
    */
-  constructor(entityManager, tileCollisionSystem, combatSystem) {
+  constructor(entityManager, tileCollisionSystem, combatSystem, tileManager) {
     this.entityManager = entityManager;
     this.tileCollisionSystem = tileCollisionSystem;
     this.combatSystem = combatSystem;
+    this.tileManager = tileManager;
   }
 
   /**
@@ -29,10 +30,27 @@ export default class CollisionManager {
     // Prevent player from moving through solid tiles
     this.tileCollisionSystem.applyCollision(player);
 
+    
     // apply movement AFTER tile collision is checked
     player.x += player.dx;
     player.y += player.dy;
 
+    const corners = [
+      [player.x, player.y],
+      [player.x + player.width, player.y],
+      [player.x, player.y + player.height],
+      [player.x + player.width, player.y + player.height],
+    ];
+
+  for (const [px, py] of corners) {
+    if (isHazardAt(this.tileManager, px, py)) {
+      player.health -= 1;
+      console.log("⚠️ Player stepped on hazard tile! Health:", player.health);
+      break;
+    }
+  }
+
+    
     // Handle player vs enemy AABB collision and apply game logic
     resolvePlayerEnemyCollisions(
       player,
