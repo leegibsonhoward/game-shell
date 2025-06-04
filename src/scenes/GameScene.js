@@ -1,5 +1,6 @@
 // src/scenes/GameScene.js
-import EntityManager from "../entities/EntityManager.js";
+import EntityManager from "../core/EntityManager.js";
+import EntitySystem from "../systems/EntitySystem.js";
 import Renderer from "../core/Renderer.js";
 import InputHandler from "../core/InputHandler.js";
 import AssetLoader from "../core/AssetLoader.js";
@@ -18,12 +19,14 @@ export default class GameScene {
     this.debugDrawHitboxes = false; // Toggle for hitbox debug
     this.showGrid = false;          // Toggle for debug grid
     this.entityManager = new EntityManager();
+    this.entitySystem = new EntitySystem(this.entityManager);
+
     this.input = new InputHandler();
     
     // Gameplay systems
-    this.movementSystem = new MovementSystem(this.input, this.entityManager);
-    this.enemySystem = new EnemySystem(this.entityManager);
-    this.combatSystem = new CombatSystem(this.entityManager);
+    this.movementSystem = new MovementSystem(this.input, this.entitySystem);
+    this.enemySystem = new EnemySystem(this.entitySystem);
+    this.combatSystem = new CombatSystem(this.entitySystem);
     
     // Tile-based systems   
     this.tileManager = new TileManager(); // Handles all tilemaps
@@ -59,7 +62,7 @@ export default class GameScene {
 
     // Setup collision manager to coordinate logic
     this.collisionManager = new CollisionManager(
-      this.entityManager,
+      this.entitySystem,
       this.tileCollisionSystem,
       this.combatSystem,
       this.tileManager
@@ -72,7 +75,9 @@ export default class GameScene {
     const standardWidth = 32;
     const standardHeight = 32;
 
-    const player = this.entityManager.getPlayer();
+    const player = this.entitySystem.getPlayer();
+    this.entitySystem.setPlayer(player);
+
     player.width = standardWidth;
     player.height = standardHeight;
     player.sprite = {
@@ -81,7 +86,7 @@ export default class GameScene {
       frameHeight: playerImg.height,
     };
 
-    for (const enemy of this.entityManager.enemies) {
+    for (const enemy of this.entitySystem.getEnemies()) {
       enemy.width = standardWidth;
       enemy.height = standardHeight;
       enemy.sprite = {
@@ -89,7 +94,10 @@ export default class GameScene {
         frameWidth: enemyImg.width,
         frameHeight: enemyImg.height,
       };
+      this.enemySystem.spawnEnemy(32, 168);
     }
+
+
 
     this.renderer = new Renderer(this.getContext(), this.entityManager);
     this.isLoaded = true;
@@ -195,7 +203,7 @@ export default class GameScene {
     this.renderer.render();
 
     // ✅ Draw HUD
-    const player = this.entityManager.getPlayer();
+    const player = this.entitySystem.getPlayer();
     ctx.fillStyle = "#00FF00";
     ctx.font = "bold 12px monospace";
     ctx.fillStyle = "#000";

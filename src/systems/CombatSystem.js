@@ -1,11 +1,11 @@
 // src/systems/CombatSystem.js
 export default class CombatSystem {
-  constructor(entityManager) {
-    this.entityManager = entityManager;
+  constructor(entitySystem) {
+    this.entitySystem = entitySystem;
   }
 
   attackEnemy(index, damage = 10) {
-    const enemies = this.entityManager.getEnemies();
+    const enemies = this.entitySystem.getEnemies();
     const enemy = enemies[index];
 
     if (!enemy) return "not found";
@@ -13,7 +13,7 @@ export default class CombatSystem {
     const defeated = enemy.takeDamage ? enemy.takeDamage(damage) : (enemy.health -= damage) <= 0;
     if (defeated) {
       enemies.splice(index, 1);
-      this.entityManager.score += 10;
+      this.entitySystem.score += 10;
       return "defeated";
     }
 

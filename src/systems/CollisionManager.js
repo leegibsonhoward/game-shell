@@ -12,8 +12,8 @@ export default class CollisionManager {
    * @param {TileCollisionSystem} tileCollisionSystem - for solid tile blocking
    * @param {CombatSystem} combatSystem - to resolve combat on collision
    */
-  constructor(entityManager, tileCollisionSystem, combatSystem, tileManager) {
-    this.entityManager = entityManager;
+  constructor(entitySystem, tileCollisionSystem, combatSystem, tileManager) {
+    this.entitySystem = entitySystem;
     this.tileCollisionSystem = tileCollisionSystem;
     this.combatSystem = combatSystem;
     this.tileManager = tileManager;
@@ -25,7 +25,8 @@ export default class CollisionManager {
    * - Detects and handles player vs enemy overlaps
    */
   update() {
-    const player = this.entityManager.getPlayer();
+    const player = this.entitySystem.getPlayer();
+    
 
     // Prevent player from moving through solid tiles
     this.tileCollisionSystem.applyCollision(player);
@@ -49,17 +50,17 @@ export default class CollisionManager {
       break;
     }
   }
-
-    
+ 
     // Handle player vs enemy AABB collision and apply game logic
     resolvePlayerEnemyCollisions(
       player,
-      this.entityManager.enemies,
+      this.entitySystem.getEnemies(),
       (player, enemy, index) => {
         console.log(`💥 Player collided with enemy ${index}`);
         player.health -= 10;
         // disabled to fine tune hitbox precision
         //this.combatSystem.attackEnemy(index);
+        //athis.entitySystem.removeEnemy(enemy);
         //console.log(`Player health: ${player.health}`);
       }
     );

@@ -1,13 +1,13 @@
 // src/systems/MovementSystem.js
 export default class MovementSystem {
-  constructor(input, entityManager) {
+  constructor(input, entitySystem) {
     this.input = input;
-    this.entityManager = entityManager;
+    this.entitySystem = entitySystem;
   }
 
   update() {
     const { dx, dy } = this.input.getMovementVector();
-    const player = this.entityManager.getPlayer();
+    const player = this.entitySystem.getPlayer();
 
     // set dx/dy, even if zero, to ensure they're defined
     player.dx = dx;
@@ -23,7 +23,7 @@ export default class MovementSystem {
    * a separate method that sets dx/dy and lets systems process it.
    */
     teleportPlayer(dx, dy) {
-    const player = this.entityManager.getPlayer();
+    const player = this.entitySystem.getPlayer();
     player.x += dx;
     player.y += dy;
   }

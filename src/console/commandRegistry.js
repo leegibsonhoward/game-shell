@@ -3,7 +3,7 @@ import registerCoreCommands from "./commands/coreCommands.js";
 import registerGameCommands from "./commands/gameCommands.js";
 import registerScriptCommands from "./commands/scriptCommands.js";
 
-export default function setupCommandRegistry(print, entityManager) {
+export default function setupCommandRegistry(print, entityManager, enemySystem) {
   const commands = {};
   const aliasMap = {};
 
@@ -63,7 +63,7 @@ export default function setupCommandRegistry(print, entityManager) {
   console.log("EntityManager available:", entityManager);
 
   registerCoreCommands(registerCommand, aliasMap, print);
-  registerGameCommands(registerCommand, print, entityManager);
+  registerGameCommands(registerCommand, print, enemySystem);
   registerScriptCommands(registerCommand, print, handleCommand);
 
   return handleCommand;

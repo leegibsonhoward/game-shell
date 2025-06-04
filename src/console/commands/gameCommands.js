@@ -10,7 +10,7 @@ export default function registerGameCommands(register, print) {
       const scene = window.currentScene;
       if (!scene?.entityManager) return print("No active scene or entity manager");
 
-      scene.entityManager.spawnEnemy(parseInt(x), parseInt(y));
+      scene.enemySystem.spawnEnemy(parseInt(x), parseInt(y));
       print(`Spawned enemy at (${x}, ${y})`);
     });
     
@@ -27,7 +27,7 @@ export default function registerGameCommands(register, print) {
       
       if (isNaN(dx) || isNaN(dy)) return print("Usage: move player <dx> <dy>");
       
-      //const player = scene.entityManager.getPlayer();
+      //const player = scene.entitySystem.getPlayer();
       //player.x += dx;
       //player.y += dy;
       scene.movementSystem.teleportPlayer(dx,dy);
@@ -62,7 +62,7 @@ export default function registerGameCommands(register, print) {
 const scene = window.currentScene;
     if (!scene?.entityManager) return print("No entity manager.");
 
-    const player = scene.entityManager.getPlayer();
+    const player = scene.entitySystem.getPlayer();
     const score = scene.entityManager.getScore();
     print(`Health: ${player.health} | Score: ${score}`);
     print(`Inventory: ${player.inventory.join(", ") || "Empty"}`);
