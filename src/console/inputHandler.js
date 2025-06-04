@@ -1,4 +1,4 @@
-// src/console/inputHandler.js
+// src/console/InputHandler.js
 export default function handleConsoleInput(inputEl, outputEl, handleCommand, print) {
     let commandHistory = JSON.parse(localStorage.getItem("jconsole-command-history") || "[]");
     let historyIndex = commandHistory.length;

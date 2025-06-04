@@ -1,4 +1,4 @@
-// src/core/inputHandler.js
+// src/core/InputHandler.js
 export default class InputHandler {
     constructor() {
       this.keys = {};

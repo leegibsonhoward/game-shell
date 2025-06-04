@@ -1,7 +1,7 @@
 // src/main.js
 
 import SceneManager from "./core/SceneManager.js";
-import GameLoop from "./core/gameLoop.js";
+import GameLoop from "./core/GameLoop.js";
 import GameScene from "./scenes/GameScene.js";
 
 // Start with the GameScene

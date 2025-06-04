@@ -1,4 +1,4 @@
-// src/core/gameLoop.js
+// src/core/GameLoop.js
 export default class GameLoop {
     constructor(updateFn, renderFn) {
       this.updateFn = updateFn;
