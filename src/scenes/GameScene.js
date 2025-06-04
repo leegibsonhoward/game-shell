@@ -46,7 +46,7 @@ export default class GameScene {
     console.log("Tileset image loaded:", tilesetImg.width, tilesetImg.height);
 
     // Load tilemap JSON with multiple named layers
-    const layers = await loadTilemapFromJSON("/assets/maps/level-map-hazard.json", 32, 32);
+    const layers = await loadTilemapFromJSON("/assets/maps/level-map-walls.json", 32, 32);
 
     // Merge layers into manager for future expansion
     this.tileManager.addLayers(layers);
