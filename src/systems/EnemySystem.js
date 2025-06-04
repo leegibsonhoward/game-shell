@@ -38,7 +38,7 @@ spawnEnemy(x, y, sprite = null) {
   updateAllEnemies(deltaTime) {
 	// enemy tracking player is disabled for now to
 	// keep engine capabilities flexible
-    // this.trackPlayer();
+    this.trackPlayer();
     for (const enemy of this.entitySystem.getEnemies()) {
       if (enemy.update) enemy.update(deltaTime);
 	}

@@ -1,5 +1,5 @@
 // src/entities/Enemy.js
-import Entity from "./Entity.js";
+import Entity from "../core/Entity.js";
 
 export default class Enemy extends Entity {
   constructor(x, y) {

@@ -1,5 +1,5 @@
 // src/entities/Player.js
-import Entity from "./Entity.js";
+import Entity from "../core/Entity.js";
 
 export default class Player extends Entity {
   constructor(x, y) {
