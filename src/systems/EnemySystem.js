@@ -28,7 +28,7 @@ spawnEnemy(x, y, sprite = null) {
   }
 
   moveEnemy(index, dx, dy) {
-    const enemy = this.entityManager.getEnemies()[index];
+    const enemy = this.entitySystem.getEnemies()[index];
     if (enemy) {
       enemy.x += dx;
       enemy.y += dy;
