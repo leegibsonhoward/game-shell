@@ -1,6 +1,7 @@
 // core/systems/TileCollisionSystem.js
 
 import { checkAABBCollision } from "../collision/AABB.js";
+import { getHitbox } from "../collision/getHitbox.js";
 
 export default class TileCollisionSystem {
   constructor(tileManager, tileset) {
@@ -50,19 +51,8 @@ export default class TileCollisionSystem {
   const shapes = this.tileset.getCollisionShapes(tileIndex);
   if (!shapes || shapes.length === 0) return false;
 
-  const entityBox = entity.hitbox
-    ? {
-        x: entity.x + entity.hitbox.offsetX,
-        y: entity.y + entity.hitbox.offsetY,
-        width: entity.hitbox.width,
-        height: entity.hitbox.height,
-      }
-    : {
-        x: entity.x,
-        y: entity.y,
-        width: entity.width,
-        height: entity.height,
-      };
+  // core/collision/getHitbox.js
+  const entityBox = getHitbox(entity);
 
   for (const shape of shapes) {
     const shapeBox = {
