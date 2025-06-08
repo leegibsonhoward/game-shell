@@ -16,6 +16,7 @@ import CollisionManager from "../systems/CollisionManager.js";
 
 export default class GameScene {
   constructor() {
+    this.debugBoundingBox = false;
     this.debugDrawHitboxes = false; // Toggle for hitbox debug
     this.showGrid = false;          // Toggle for debug grid
     this.entityManager = new EntityManager();
@@ -107,6 +108,14 @@ export default class GameScene {
     this.renderer = new Renderer(this.getContext(), this.entityManager);
     this.isLoaded = true;
 
+    // Register key listener to toggle bounding box  'B'
+    window.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === "b") {
+        this.debugBoundingBox = !this.debugBoundingBox;
+        console.log(`Bounding Box: ${this.showGrid ? "ON" : "OFF"}`);
+      }
+    });
+
     // ⌨️ Register key listener to toggle grid with 'G'
     window.addEventListener("keydown", (e) => {
       if (e.key.toLowerCase() === "g") {
@@ -114,7 +123,6 @@ export default class GameScene {
         console.log(`Grid overlay: ${this.showGrid ? "ON" : "OFF"}`);
       }
     });
-
     window.addEventListener("keydown", (e) => {
       if (e.key.toLowerCase() === "h") {
       this.debugDrawHitboxes = !this.debugDrawHitboxes;

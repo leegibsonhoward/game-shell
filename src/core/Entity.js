@@ -35,12 +35,14 @@ export default class Entity {
       ctx.fillStyle = this.color;
       ctx.fillRect(this.x, this.y, this.width, this.height);
     }
+    if (window.currentScene?.debugBoundingBox) {
+
     // debug outline of all entities
     ctx.strokeStyle = 'yellow';
     ctx.lineWidth = 1;
     ctx.strokeRect(
     Math.floor(this.x), Math.floor(this.y), this.width, this.height);
-
+    }
     // Draw red hitbox if enabled
     if (window.currentScene?.debugDrawHitboxes && this.hitbox) {
     //console.log(window.currentScene?.debugDrawHitboxes)
