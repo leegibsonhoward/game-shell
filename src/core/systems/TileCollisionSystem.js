@@ -1,16 +1,6 @@
 // core/systems/TileCollisionSystem.js
 
-//import { checkAABBCollision } from "../collision/AABB.js";
-
-// Local utility to check rectangle-vs-rectangle overlap (AABB)
-function aabb(a, b) {
-  return (
-    a.x < b.x + b.width &&
-    a.x + a.width > b.x &&
-    a.y < b.y + b.height &&
-    a.y + a.height > b.y
-  );
-}
+import { checkAABBCollision } from "../collision/AABB.js";
 
 export default class TileCollisionSystem {
   constructor(tileManager, tileset) {
@@ -81,11 +71,11 @@ export default class TileCollisionSystem {
       width: shape.width,
       height: shape.height,
     };
-     // Direct rectangle collision check
-      if (aabb(entityBox, shapeBox)) {
-        console.log("🟥 COLLISION with tile shape:", shapeBox);
-        return true;
-      }
+    // Direct rectangle collision check
+    if (checkAABBCollision(entityBox, shapeBox)) {
+      console.log("🟥 COLLISION with tile shape:", shapeBox);
+      return true;
+    }
   }
 
   return false;
@@ -107,17 +97,17 @@ _getCorners(entity) {
    */
   applyCollision(entity) {
     const originalX = entity.x;
-  const originalY = entity.y;
+    const originalY = entity.y;
 
-  // --- Check X movement only ---
-  entity.x = originalX + entity.dx;
-  entity.y = originalY;
-  let xBlocked = false;
-  for (const [px, py] of this._getCorners(entity)) {
-    if (this.isSolidAt(px, py, entity)) {
-      xBlocked = true;
-      break;
-    }
+    // --- Check X movement only ---
+    entity.x = originalX + entity.dx;
+    entity.y = originalY;
+    let xBlocked = false;
+    for (const [px, py] of this._getCorners(entity)) {
+        if (this.isSolidAt(px, py, entity)) {
+            xBlocked = true;
+            break;
+        }
   }
 
   // --- Check Y movement only ---
