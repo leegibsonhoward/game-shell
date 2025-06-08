@@ -1,6 +1,7 @@
 // core/systems/TileCollisionSystem.js
 
 import { checkAABBCollision } from "../collision/AABB.js";
+import { getEntityCorners } from "../collision/getEntityCorners.js";
 import { getHitbox } from "../collision/getHitbox.js";
 
 export default class TileCollisionSystem {
@@ -71,16 +72,6 @@ export default class TileCollisionSystem {
   return false;
 }
 
-_getCorners(entity) {
-  return [
-    [entity.x, entity.y],
-    [entity.x + entity.width, entity.y],
-    [entity.x, entity.y + entity.height],
-    [entity.x + entity.width, entity.y + entity.height],
-  ];
-}
-
-
   /**
    * Prevent entity movement if destination is solid
    * @param {object} entity - Must have x, y, width, height, and dx, dy
@@ -93,7 +84,7 @@ _getCorners(entity) {
     entity.x = originalX + entity.dx;
     entity.y = originalY;
     let xBlocked = false;
-    for (const [px, py] of this._getCorners(entity)) {
+    for (const [px, py] of getEntityCorners(entity)) {
         if (this.isSolidAt(px, py, entity)) {
             xBlocked = true;
             break;
@@ -104,7 +95,7 @@ _getCorners(entity) {
   entity.x = originalX;
   entity.y = originalY + entity.dy;
   let yBlocked = false;
-  for (const [px, py] of this._getCorners(entity)) {
+  for (const [px, py] of getEntityCorners(entity)) {
     if (this.isSolidAt(px, py, entity)) {
       yBlocked = true;
       break;

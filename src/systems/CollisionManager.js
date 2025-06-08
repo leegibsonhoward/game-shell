@@ -1,6 +1,6 @@
 // systems/CollisionManager.js
 import { resolvePlayerEnemyCollisions, isHazardAt } from "./CollisionSystem.js";
-
+import { getEntityCorners } from "../core/collision/getEntityCorners.js";
 /**
  * CollisionManager orchestrates all game-specific collision logic.
  * It connects tile-based collision with entity-based AABB detection,
@@ -36,12 +36,7 @@ export default class CollisionManager {
     player.x += player.dx;
     player.y += player.dy;
 
-    const corners = [
-      [player.x, player.y],
-      [player.x + player.width, player.y],
-      [player.x, player.y + player.height],
-      [player.x + player.width, player.y + player.height],
-    ];
+    const corners = getEntityCorners(player);
 
   for (const [px, py] of corners) {
     if (isHazardAt(this.tileManager, px, py)) {
