@@ -42,11 +42,16 @@ export default class GameScene {
   async load() {
     // Load tileset image used for drawing the map
     const tilesetImg = await AssetLoader.loadImage("dungeon", "/assets/tilesets/level-tileset.png");
+    const tilesetData = await fetch("/assets/tilesets/level-shape.tsx.json").then(res => res.json());
+
     this.tileset = new Tileset(tilesetImg, 32, 32, 0);
+    this.tileset.loadCollisionShapesFromTSX(tilesetData);
+    console.log("Loaded collision shapes:", this.tileset.collisionShapes);
+
     console.log("Tileset image loaded:", tilesetImg.width, tilesetImg.height);
 
     // Load tilemap JSON with multiple named layers
-    const layers = await loadTilemapFromJSON("/assets/maps/level-map-walls.json", 32, 32);
+    const layers = await loadTilemapFromJSON("/assets/maps/level-map-shapes.json", 32, 32);
 
     // Merge layers into manager for future expansion
     this.tileManager.addLayers(layers);
@@ -58,7 +63,7 @@ export default class GameScene {
     console.log("Loaded tile layers:", Object.keys(layers));
 
     // Setup tile collision system using 'collision' layer
-    this.tileCollisionSystem = new TileCollisionSystem(this.tileManager);
+    this.tileCollisionSystem = new TileCollisionSystem(this.tileManager, this.tileset);
 
     // Setup collision manager to coordinate logic
     this.collisionManager = new CollisionManager(

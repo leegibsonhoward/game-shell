@@ -1,8 +1,7 @@
 // src/core/Tileset.js
 
 /**
- * Tileset handles slicing and accessing individual tiles from a larger tilesheet image.
- * This class is used by the TileRenderer to draw specific tiles onto the canvas.
+ * Tileset handles slicing a tileset image and stores optional collision shapes.
  */
 export default class Tileset {
   /**
@@ -19,29 +18,48 @@ export default class Tileset {
     this.spacing = spacing;
     this.margin = margin;
 
-    // Calculate number of columns and rows from image size
-    this.columns = Math.floor(image.width / tileWidth);
-    this.rows = Math.floor(image.height / tileHeight);
+    this.columns = Math.floor(
+      (image.width - margin + spacing) / (tileWidth + spacing)
+    );
+    this.rows = Math.floor(
+      (image.height - margin + spacing) / (tileHeight + spacing)
+    );
+
+    /**
+     * Indexed by tile ID → array of shapes [{ x, y, width, height } or polygon]
+     */
+    this.collisionShapes = {};
   }
 
   /**
-   * Draw a single tile by its index at a given position on the canvas.
-   * @param {CanvasRenderingContext2D} ctx - The rendering context.
-   * @param {number} tileIndex - The index of the tile to draw.
-   * @param {number} x - The destination x position (in pixels).
-   * @param {number} y - The destination y position (in pixels).
-   * @param {number} [scale=1] - Optional scale multiplier for rendering.
+   * Load per-tile collision data from a parsed .tsx JSON (Tiled tileset)
+   * @param {object} tsxData - Parsed JSON object from a .tsx file
    */
-  drawTile(ctx, tileIndex, x, y, scale = 1) {
-    // Calculate source X and Y from index
-    const sx = (tileIndex % this.columns) * (this.tileWidth + this.spacing);
-    const sy = Math.floor(tileIndex / this.columns) * (this.tileHeight + this.spacing);
+  loadCollisionShapesFromTSX(tsxData) {
+    if (!tsxData || !Array.isArray(tsxData.tiles)) return;
 
-    // Draw the tile from the tileset to the canvas
-    ctx.drawImage(
-      this.image,
-      sx, sy, this.tileWidth, this.tileHeight, // Source rect in tileset
-      x, y, this.tileWidth * scale, this.tileHeight * scale // Destination rect on screen
-    );
+    for (const tile of tsxData.tiles) {
+      const tileId = tile.id;
+      if (tile.objectgroup && Array.isArray(tile.objectgroup.objects)) {
+        this.collisionShapes[tileId] = tile.objectgroup.objects.map(obj => {
+          return {
+            x: obj.x,
+            y: obj.y,
+            width: obj.width,
+            height: obj.height,
+            polygon: obj.polygon || null
+          };
+        });
+      }
+    }
+  }
+
+  /**
+   * Get the collision shape(s) for a tile ID
+   * @param {number} tileIndex
+   * @returns {Array|undefined}
+   */
+  getCollisionShapes(tileIndex) {
+    return this.collisionShapes[tileIndex];
   }
 }
