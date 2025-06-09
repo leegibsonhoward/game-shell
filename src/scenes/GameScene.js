@@ -16,7 +16,6 @@ import CollisionManager from "../systems/CollisionManager.js";
 
 export default class GameScene {
   constructor() {
-    this.debugPolyHitbox = false;
     this.debugBoundingBox = false;
     this.debugDrawHitboxes = false; // Toggle for hitbox debug
     this.showGrid = false;          // Toggle for debug grid
@@ -131,12 +130,6 @@ export default class GameScene {
       }
     });
 
-     window.addEventListener("keydown", (e) => {
-      if (e.key.toLowerCase() === "p") {
-      this.debugPolyHitbox = !this.debugPolyHitbox;
-      console.log(`🔲 Hitbox Poly Debug: ${this.debugPolyHitbox ? "ON" : "OFF"}`);
-      }
-    });
   }
 
   getContext() {

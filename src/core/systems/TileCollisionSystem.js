@@ -70,17 +70,6 @@ export default class TileCollisionSystem {
           y: row * layer.tileHeight + shape.y + p.y,
         }));
 
-         if (ctx) {
-  ctx.beginPath();
-  ctx.moveTo(worldPoly[0].x, worldPoly[0].y);
-  for (let i = 1; i < worldPoly.length; i++) {
-    ctx.lineTo(worldPoly[i].x, worldPoly[i].y);
-  }
-  ctx.closePath();
-  ctx.strokeStyle = "magenta";
-  ctx.lineWidth = 0.5;
-  ctx.stroke();
-}
         if (aabbIntersectsPolygon(entityBox, worldPoly)) {
           console.log("🔺 SAT POLYGON COLLISION with tile shape:", worldPoly);
           return true;
