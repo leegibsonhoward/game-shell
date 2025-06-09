@@ -3,8 +3,7 @@
 import { checkAABBCollision } from "../collision/AABB.js";
 import { getHitboxCorners } from "../collision/getHitboxCorners.js";
 import { getHitbox } from "../collision/getHitbox.js";
-import { pointInPolygon} from "../collision/pointInPolygon.js"
-import { getHitboxPoints } from "../collision/getHitboxPoints.js";
+import { aabbIntersectsPolygon } from "../collision/SAT.js";
 
 export default class TileCollisionSystem {
   constructor(tileManager, tileset) {
@@ -64,9 +63,8 @@ export default class TileCollisionSystem {
   const entityBox = getHitbox(entity);
 
   for (const shape of shapes) {
-    const isPolygon = Array.isArray(shape.points);
-
-      if (isPolygon) {
+    if (Array.isArray(shape.points)) {
+        // 🔺 Use SAT-based AABB-vs-Polygon intersection
         const worldPoly = shape.points.map(p => ({
           x: col * layer.tileWidth + shape.x + p.x,
           y: row * layer.tileHeight + shape.y + p.y,
@@ -83,13 +81,13 @@ export default class TileCollisionSystem {
   ctx.lineWidth = 0.5;
   ctx.stroke();
 }
-        for (const [px, py] of getHitboxCorners(entity)) {
-          if (pointInPolygon(px, py, worldPoly)) {
-            console.log("🔺 POLYGON COLLISION with tile shape:", worldPoly);
-            return true;
-          }
+        if (aabbIntersectsPolygon(entityBox, worldPoly)) {
+          console.log("🔺 SAT POLYGON COLLISION with tile shape:", worldPoly);
+          return true;
         }
+
       } else {
+        // 🟥 Rectangle shape fallback (AABB vs AABB)
         const shapeBox = {
           x: col * layer.tileWidth + shape.x,
           y: row * layer.tileHeight + shape.y,
@@ -119,7 +117,7 @@ export default class TileCollisionSystem {
   entity.x = originalX + entity.dx;
   entity.y = originalY;
   let xBlocked = false;
-  for (const [px, py] of getHitboxPoints(entity)) {
+  for (const [px, py] of getHitboxCorners(entity)) {
     if (this.isSolidAt(px, py, entity)) {
       xBlocked = true;
       break;
@@ -130,7 +128,7 @@ export default class TileCollisionSystem {
   entity.x = originalX;
   entity.y = originalY + entity.dy;
   let yBlocked = false;
-  for (const [px, py] of getHitboxPoints(entity)) {
+  for (const [px, py] of getHitboxCorners(entity)) {
     if (this.isSolidAt(px, py, entity)) {
       yBlocked = true;
       break;
