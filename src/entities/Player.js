@@ -8,7 +8,7 @@ export default class Player extends Entity {
         offsetX: 6,
         offsetY: 6,
         width: 20,
-        height: 24
+        height: 26
     };
     this.inventory = [];
   }
