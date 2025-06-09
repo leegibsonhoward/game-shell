@@ -3,6 +3,8 @@
 import { checkAABBCollision } from "../collision/AABB.js";
 import { getHitboxCorners } from "../collision/getHitboxCorners.js";
 import { getHitbox } from "../collision/getHitbox.js";
+import { pointInPolygon} from "../collision/pointInPolygon.js"
+import { getHitboxPoints } from "../collision/getHitboxPoints.js";
 
 export default class TileCollisionSystem {
   constructor(tileManager, tileset) {
@@ -48,6 +50,8 @@ export default class TileCollisionSystem {
 
   const tileIndex = layer.data[row][col];
   if (tileIndex < 0) return false;
+  const ctx = window.currentScene?.debugPolyHitbox ? window.currentScene?.ctx : null;
+
 
   const shapes = this.tileset.getCollisionShapes(tileIndex);
     //if (!shapes || shapes.length === 0) return false;
@@ -60,17 +64,44 @@ export default class TileCollisionSystem {
   const entityBox = getHitbox(entity);
 
   for (const shape of shapes) {
-    const shapeBox = {
-      x: col * layer.tileWidth + shape.x,
-      y: row * layer.tileHeight + shape.y,
-      width: shape.width,
-      height: shape.height,
-    };
-    // Direct rectangle collision check
-    if (checkAABBCollision(entityBox, shapeBox)) {
-      console.log("🟥 COLLISION with tile shape:", shapeBox);
-      return true;
-    }
+    const isPolygon = Array.isArray(shape.points);
+
+      if (isPolygon) {
+        const worldPoly = shape.points.map(p => ({
+          x: col * layer.tileWidth + shape.x + p.x,
+          y: row * layer.tileHeight + shape.y + p.y,
+        }));
+
+         if (ctx) {
+  ctx.beginPath();
+  ctx.moveTo(worldPoly[0].x, worldPoly[0].y);
+  for (let i = 1; i < worldPoly.length; i++) {
+    ctx.lineTo(worldPoly[i].x, worldPoly[i].y);
+  }
+  ctx.closePath();
+  ctx.strokeStyle = "magenta";
+  ctx.lineWidth = 0.5;
+  ctx.stroke();
+}
+        for (const [px, py] of getHitboxCorners(entity)) {
+          if (pointInPolygon(px, py, worldPoly)) {
+            console.log("🔺 POLYGON COLLISION with tile shape:", worldPoly);
+            return true;
+          }
+        }
+      } else {
+        const shapeBox = {
+          x: col * layer.tileWidth + shape.x,
+          y: row * layer.tileHeight + shape.y,
+          width: shape.width,
+          height: shape.height,
+        };
+
+        if (checkAABBCollision(entityBox, shapeBox)) {
+          console.log("🟥 RECT COLLISION with tile shape:", shapeBox);
+          return true;
+        }
+      }
   }
 
   return false;
@@ -82,24 +113,24 @@ export default class TileCollisionSystem {
    */
   applyCollision(entity) {
     const originalX = entity.x;
-    const originalY = entity.y;
+  const originalY = entity.y;
 
-    // --- Check X movement only ---
-    entity.x = originalX + entity.dx;
-    entity.y = originalY;
-    let xBlocked = false;
-    for (const [px, py] of getHitboxCorners(entity)) {
-        if (this.isSolidAt(px, py, entity)) {
-            xBlocked = true;
-            break;
-        }
+  // --- Check X movement only ---
+  entity.x = originalX + entity.dx;
+  entity.y = originalY;
+  let xBlocked = false;
+  for (const [px, py] of getHitboxPoints(entity)) {
+    if (this.isSolidAt(px, py, entity)) {
+      xBlocked = true;
+      break;
+    }
   }
 
   // --- Check Y movement only ---
   entity.x = originalX;
   entity.y = originalY + entity.dy;
   let yBlocked = false;
-  for (const [px, py] of getHitboxCorners(entity)) {
+  for (const [px, py] of getHitboxPoints(entity)) {
     if (this.isSolidAt(px, py, entity)) {
       yBlocked = true;
       break;
@@ -110,8 +141,10 @@ export default class TileCollisionSystem {
   entity.x = originalX;
   entity.y = originalY;
 
-  // --- Apply only if not blocked ---
+  // Cancel blocked movement
   if (xBlocked) entity.dx = 0;
   if (yBlocked) entity.dy = 0;
-  }
 }
+
+  }
+

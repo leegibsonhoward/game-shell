@@ -16,6 +16,7 @@ import CollisionManager from "../systems/CollisionManager.js";
 
 export default class GameScene {
   constructor() {
+    this.debugPolyHitbox = false;
     this.debugBoundingBox = false;
     this.debugDrawHitboxes = false; // Toggle for hitbox debug
     this.showGrid = false;          // Toggle for debug grid
@@ -43,7 +44,7 @@ export default class GameScene {
   async load() {
     // Load tileset image used for drawing the map
     const tilesetImg = await AssetLoader.loadImage("dungeon", "/assets/tilesets/level-tileset.png");
-    const tilesetData = await fetch("/assets/tilesets/level-shape.tsx.json").then(res => res.json());
+    const tilesetData = await fetch("/assets/tilesets/level-polygon.tsx.json").then(res => res.json());
 
     this.tileset = new Tileset(tilesetImg, 32, 32, 0);
     this.tileset.loadCollisionShapesFromTSX(tilesetData);
@@ -52,7 +53,7 @@ export default class GameScene {
     console.log("Tileset image loaded:", tilesetImg.width, tilesetImg.height);
 
     // Load tilemap JSON with multiple named layers
-    const layers = await loadTilemapFromJSON("/assets/maps/level-map-shapes.json", 32, 32);
+    const layers = await loadTilemapFromJSON("/assets/maps/level-map-polygon.json", 32, 32);
 
     // Merge layers into manager for future expansion
     this.tileManager.addLayers(layers);
@@ -130,6 +131,12 @@ export default class GameScene {
       }
     });
 
+     window.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === "p") {
+      this.debugPolyHitbox = !this.debugPolyHitbox;
+      console.log(`🔲 Hitbox Poly Debug: ${this.debugPolyHitbox ? "ON" : "OFF"}`);
+      }
+    });
   }
 
   getContext() {

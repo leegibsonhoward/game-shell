@@ -36,24 +36,43 @@ export default class Tileset {
    * @param {object} tsxData - Parsed JSON object from a .tsx file
    */
   loadCollisionShapesFromTSX(tsxData) {
-    if (!tsxData || !Array.isArray(tsxData.tiles)) return;
+    if (!Array.isArray(tsxData.tiles)) return;
 
-    for (const tile of tsxData.tiles) {
-      const tileId = tile.id;
-      if (tile.objectgroup && Array.isArray(tile.objectgroup.objects)) {
-        this.collisionShapes[tileId] = tile.objectgroup.objects.map(obj => {
-          return {
-            x: obj.x,
-            y: obj.y,
-            width: obj.width,
-            height: obj.height,
-            polygon: obj.polygon || null
-          };
+  for (const tile of tsxData.tiles) {
+    const tileId = tile.id;
+
+    // Tiled stores collision shapes in an 'objectgroup'
+    const shapeObjects = tile.objectgroup?.objects;
+    if (!Array.isArray(shapeObjects)) continue;
+
+    const shapes = [];
+
+    for (const obj of shapeObjects) {
+      if (obj.polygon) {
+        // 🔺 Polygon shape
+        shapes.push({
+          type: "polygon",
+          x: obj.x,
+          y: obj.y,
+          points: obj.polygon, // Array of points relative to shape (and tile)
+        });
+      } else {
+        // 🟥 Rectangle shape (default)
+        shapes.push({
+          type: "rect",
+          x: obj.x,
+          y: obj.y,
+          width: obj.width,
+          height: obj.height,
         });
       }
     }
-  }
 
+    if (shapes.length > 0) {
+      this.collisionShapes[tileId] = shapes;
+    }
+  }
+  }
   /**
    * Get the collision shape(s) for a tile ID
    * @param {number} tileIndex
