@@ -1,7 +1,7 @@
 // core/systems/TileCollisionSystem.js
 
 import { checkAABBCollision } from "../collision/AABB.js";
-import { getEntityCorners } from "../collision/getEntityCorners.js";
+import { getHitboxCorners } from "../collision/getHitboxCorners.js";
 import { getHitbox } from "../collision/getHitbox.js";
 
 export default class TileCollisionSystem {
@@ -50,7 +50,11 @@ export default class TileCollisionSystem {
   if (tileIndex < 0) return false;
 
   const shapes = this.tileset.getCollisionShapes(tileIndex);
-  if (!shapes || shapes.length === 0) return false;
+    //if (!shapes || shapes.length === 0) return false;
+    // Fallback: treat tile as solid if it has no shapes
+    if (!shapes || shapes.length === 0) {
+      return true;
+    }
 
   // core/collision/getHitbox.js
   const entityBox = getHitbox(entity);
@@ -84,7 +88,7 @@ export default class TileCollisionSystem {
     entity.x = originalX + entity.dx;
     entity.y = originalY;
     let xBlocked = false;
-    for (const [px, py] of getEntityCorners(entity)) {
+    for (const [px, py] of getHitboxCorners(entity)) {
         if (this.isSolidAt(px, py, entity)) {
             xBlocked = true;
             break;
@@ -95,7 +99,7 @@ export default class TileCollisionSystem {
   entity.x = originalX;
   entity.y = originalY + entity.dy;
   let yBlocked = false;
-  for (const [px, py] of getEntityCorners(entity)) {
+  for (const [px, py] of getHitboxCorners(entity)) {
     if (this.isSolidAt(px, py, entity)) {
       yBlocked = true;
       break;
