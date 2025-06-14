@@ -24,6 +24,10 @@ export default class TileCollisionSystem {
   }
 
    /**
+   * Public API: Determine if world position is solid by checking tile collision shapes
+   */
+
+   /**
    * Check if a world-space position is colliding with a solid tile
    * Uses the shared tileExistsAt() utility for safe lookup.
    * @param {number} x - World-space x position in pixels
@@ -32,8 +36,14 @@ export default class TileCollisionSystem {
    */
   isSolidAt(x, y, entity) {
     const layer = this.tileManager.getLayer(this.collisionLayerName);
+    console.log("Checking layer:", this.collisionLayerName, this.tileManager.getLayer(this.collisionLayerName));
+
     return this._checkCollisionShapeAt(layer, x, y, entity);
   }
+
+   /**
+   * Internal: Check for collision between the entity and any shapes at (x, y)
+   */
 
   _checkCollisionShapeAt(layer, x, y, entity) {
   if (!layer || !layer.data || !this.tileset) return false;
@@ -49,8 +59,6 @@ export default class TileCollisionSystem {
 
   const tileIndex = layer.data[row][col];
   if (tileIndex < 0) return false;
-  const ctx = window.currentScene?.debugPolyHitbox ? window.currentScene?.ctx : null;
-
 
   const shapes = this.tileset.getCollisionShapes(tileIndex);
     //if (!shapes || shapes.length === 0) return false;
@@ -63,6 +71,7 @@ export default class TileCollisionSystem {
   const entityBox = getHitbox(entity);
 
   for (const shape of shapes) {
+
     if (Array.isArray(shape.points)) {
         // 🔺 Use SAT-based AABB-vs-Polygon intersection
         const worldPoly = shape.points.map(p => ({
@@ -133,5 +142,49 @@ export default class TileCollisionSystem {
   if (yBlocked) entity.dy = 0;
 }
 
+  renderDebug(ctx) {
+  if (!window.currentScene?.debugDrawHitboxes) return;
+
+  const layer = this.tileManager.getLayer(this.collisionLayerName);
+  if (!layer || !layer.data) return;
+
+  for (let row = 0; row < layer.data.length; row++) {
+    for (let col = 0; col < layer.data[0].length; col++) {
+      const tileIndex = layer.data[row][col];
+      if (tileIndex < 0) continue;
+
+      const shapes = this.tileset.getCollisionShapes(tileIndex);
+      if (!shapes || shapes.length === 0) continue;
+
+      for (const shape of shapes) {
+        if (Array.isArray(shape.points)) {
+          const worldPoly = shape.points.map(p => ({
+            x: col * layer.tileWidth + shape.x + p.x,
+            y: row * layer.tileHeight + shape.y + p.y,
+          }));
+
+          ctx.beginPath();
+          ctx.moveTo(worldPoly[0].x, worldPoly[0].y);
+          for (let i = 1; i < worldPoly.length; i++) {
+            ctx.lineTo(worldPoly[i].x, worldPoly[i].y);
+          }
+          ctx.closePath();
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        } else {
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(
+            col * layer.tileWidth + shape.x,
+            row * layer.tileHeight + shape.y,
+            shape.width,
+            shape.height
+          );
+        }
+      }
+    }
   }
+}
+}
 

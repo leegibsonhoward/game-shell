@@ -182,6 +182,7 @@ export default class GameScene {
   render(ctx) {
     if (!this.isLoaded) return;
 
+    this.ctx = ctx;
     // Debug background
     // ctx.fillStyle = "black";
     // ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -211,6 +212,10 @@ export default class GameScene {
       }
       ctx.restore();
     }
+
+  if (this.tileCollisionSystem?.renderDebug) {
+		this.tileCollisionSystem.renderDebug(ctx);
+  }
 
     // ✅ Draw game entities
     this.renderer.render();
