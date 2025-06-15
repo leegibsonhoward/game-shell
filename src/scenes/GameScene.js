@@ -13,6 +13,7 @@ import TileManager from "../core/tiles/TileManager.js";
 import { loadTilemapFromJSON } from "../core/tiles/TilemapLoader.js";
 import TileCollisionSystem from "../core/systems/TileCollisionSystem.js";
 import CollisionManager from "../systems/CollisionManager.js";
+import Camera from "../core/Camera.js";
 
 export default class GameScene {
   constructor() {
@@ -35,6 +36,9 @@ export default class GameScene {
     this.tileset = null;                  // Handles tileset slicing
     this.tileCollisionSystem = null;      // Handles solid tile logic
     this.collisionManager = null; // Coordinates all collision logic
+
+    // Camera System
+    this.camera = new Camera(320, 180, 3200, 1800); // 10x map size
 
     this.renderer = null;
     this.isLoaded = false;
@@ -173,6 +177,8 @@ export default class GameScene {
     
     this.collisionManager.update();
 
+    const player = this.entitySystem.getPlayer();
+    this.camera.follow(player); // 🧭 Re-center camera on player
 
     // Update enemy logic
     this.enemySystem.updateAllEnemies(deltaTime);
@@ -187,6 +193,8 @@ export default class GameScene {
     // ctx.fillStyle = "black";
     // ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    this.camera.applyTransform(ctx);
 
     // Draw tile layers (background/ground/foreground)
     if (this.tileRenderer) {
@@ -219,6 +227,9 @@ export default class GameScene {
 
     // ✅ Draw game entities
     this.renderer.render();
+
+    // 
+    this.camera.resetTransform(ctx);
 
     // ✅ Draw HUD
     const player = this.entitySystem.getPlayer();
