@@ -80,7 +80,8 @@ export default class GameScene {
     );
 
     // Load character sprites
-    const playerImg = await AssetLoader.loadImage("player", "/assets/player-walk.png");
+    const playerRun = await AssetLoader.loadImage("playerRun", "/assets/player-run.png");
+    const playerIdle = await AssetLoader.loadImage("playerIdle", "/assets/player-idle.png");
     const enemyImg = await AssetLoader.loadImage("enemy", "/assets/enemy.png");
     
     const standardWidth = 32;
@@ -90,15 +91,20 @@ export default class GameScene {
     
 		// Player animation
 		player.animator = new Animator({
-  		image: playerImg,
   		frameWidth: 32,
   		frameHeight: 32,
-  		frameDuration: 150,
-  		animations: {
-    		idle: [0],
-    		walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-  		},
-  		default: "idle"
+  		frameDuration: 200,
+  		default: "idle",
+			animations: {
+        idle: {
+        	frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          image: playerIdle,
+        },
+				run: {
+        	frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+          image: playerRun
+        },
+			}
 		});
     
 		this.entitySystem.setPlayer(player);
@@ -106,9 +112,9 @@ export default class GameScene {
     player.width = standardWidth;
     player.height = standardHeight;
     player.sprite = {
-      image: playerImg,
-      frameWidth: playerImg.width,
-      frameHeight: playerImg.height,
+      image: playerIdle,
+      frameWidth: playerIdle.width,
+      frameHeight: playerIdle.height,
     };
 
     for (const enemy of this.entitySystem.getEnemies()) {
@@ -122,6 +128,9 @@ export default class GameScene {
       this.enemySystem.spawnEnemy(32, 168);
     }
 
+console.log("Idle image:", playerIdle.width, playerIdle.height);
+console.log("Run image:", playerRun.width, playerRun.height);
+console.log("Current frame:", player.animator?.getCurrentFrame());
 
 
     this.renderer = new Renderer(this.getContext(), this.entityManager);

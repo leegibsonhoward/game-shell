@@ -29,13 +29,24 @@ export default class Entity {
 
     // Use animator if available
     if (this.animator) {
-      const frame = this.animator.getCurrentFrame();
+      const frame = this.animator?.getCurrentFrame();
+      if (!frame) {
+  console.warn("⚠️ No animation frame to draw!");
+  return;
+}
       ctx.drawImage(
-        image,
+        frame.image || image, // use animation-specific image if defined
         frame.x, frame.y, frame.width, frame.height,   // source frame on sprite sheet
         Math.round(this.x), Math.round(this.y),        // destination on canvas
         Math.round(this.width), Math.round(this.height)
       );
+      console.log("DRAW:", {
+  img: frame.image,
+  sx: frame.x,
+  sy: frame.y,
+  sw: frame.width,
+  sh: frame.height,
+});
     } else {
       // No animator: draw first frame (default)
       ctx.drawImage(
@@ -76,6 +87,7 @@ export default class Entity {
       height
     );
   }
+  
   }
 }
   

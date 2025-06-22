@@ -16,7 +16,7 @@ export default class MovementSystem {
     // 🎞️ Choose animation based on movement
     if (player.animator) {
     if (dx !== 0 || dy !== 0) {
-      player.animator.setAnimation("walk");
+      player.animator.setAnimation("run");
     } else {
       player.animator.setAnimation("idle");
     }
