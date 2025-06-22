@@ -12,6 +12,15 @@ export default class MovementSystem {
     // set dx/dy, even if zero, to ensure they're defined
     player.dx = dx;
     player.dy = dy;
+
+    // 🎞️ Choose animation based on movement
+    if (player.animator) {
+    if (dx !== 0 || dy !== 0) {
+      player.animator.setAnimation("walk");
+    } else {
+      player.animator.setAnimation("idle");
+    }
+  }
   }
 
   /**

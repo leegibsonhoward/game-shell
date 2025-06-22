@@ -14,6 +14,7 @@ import { loadTilemapFromJSON } from "../core/tiles/TilemapLoader.js";
 import TileCollisionSystem from "../core/systems/TileCollisionSystem.js";
 import CollisionManager from "../systems/CollisionManager.js";
 import Camera from "../core/Camera.js";
+import Animator from "../core/Animator.js"; // Add to top of file
 
 export default class GameScene {
   constructor() {
@@ -79,14 +80,28 @@ export default class GameScene {
     );
 
     // Load character sprites
-    const playerImg = await AssetLoader.loadImage("player", "/assets/player.png");
+    const playerImg = await AssetLoader.loadImage("player", "/assets/player-walk.png");
     const enemyImg = await AssetLoader.loadImage("enemy", "/assets/enemy.png");
     
     const standardWidth = 32;
     const standardHeight = 32;
 
     const player = this.entitySystem.getPlayer();
-    this.entitySystem.setPlayer(player);
+    
+		// Player animation
+		player.animator = new Animator({
+  		image: playerImg,
+  		frameWidth: 32,
+  		frameHeight: 32,
+  		frameDuration: 150,
+  		animations: {
+    		idle: [0],
+    		walk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  		},
+  		default: "idle"
+		});
+    
+		this.entitySystem.setPlayer(player);
 
     player.width = standardWidth;
     player.height = standardHeight;
@@ -180,7 +195,12 @@ export default class GameScene {
     const player = this.entitySystem.getPlayer();
     this.camera.follow(player); // 🧭 Re-center camera on player
 
-    // Update enemy logic
+    // Advance player's animation frames
+    if (player.animator) {
+    	player.animator.update(deltaTime);
+  	}
+    
+		// Update enemy logic
     this.enemySystem.updateAllEnemies(deltaTime);
 
   }
